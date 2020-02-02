@@ -1,30 +1,22 @@
 const express = require('express');
-const cors = require('cors');
+var cors = require('cors');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
 
-require('dotenv').config();
+mongoose.connect('mongodb+srv://mountainprincess:mountain.princess@1980@churchusersprayerrequests-92bir.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true }, () => console.log('connected to db'));
 
 const app = express();
-const port = process.env.PORT || 5000;
+const router = express.Router();
 
 app.use(cors());
 app.use(express.json());
 
-const uri = process.env.ATLAS_URI;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true }
-);
-const connection = mongoose.connection;
-connection.once('open', () => {
-    console.log("MongoDB database connection established successfully");
-})
-
-const prayerrequestsRouter = require('./routes/prayerrequests');
+const PrayerRouter = require('./routes/prayer');
 const usersRouter = require('./routes/users');
 
-app.use('/prayerrequests', prayerrequestsRouter);
+app.use('/prayer', PrayerRouter);
 app.use('/users', usersRouter);
 
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-
-});
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => 
+    console.log(`Server is running on port: ${PORT}`));
