@@ -2,19 +2,20 @@ const router = require('express').Router();
 let PrayerRequest = require('../models/prayer.model');
 
 router.route('/').get((req, res) => {
-    // res.json('lskdjfl;ksjdl;kfjl;askdfj')
     PrayerRequest.find()
-    .then(prayerrequests => res.json(prayerrequests))
+    .then(prayer => res.json(prayer))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.route('/add').post((req, res) => {
-    const username = req.body.username;
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
     const description = req.body.description;
     const date = Date.parse(req.body.date);
 
     const newPrayerRequest = new PrayerRequest({
-        username,
+        firstName,
+        lastName,
         description,
         date,
     });
@@ -26,7 +27,7 @@ router.route('/add').post((req, res) => {
 
 router.route('/:id').get((req, res) => {
     PrayerRequest.findById(req.params.id)
-    .then(prayerrequest => res.json(prayerrequest))
+    .then(prayer => res.json(prayer))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
@@ -36,14 +37,15 @@ router.route('/:id').delete((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/update/:id').post((req, res) => {
+router.route('/update/:id').put((req, res) => {
     PrayerRequest.findById(req.params.id)
-    .then(prayerrequest => {
-        prayerrequest.username = req.body.username;
-        prayerrequest.description = req.body.description;
-        prayerrequest.date = Date.parse(req.body.date);
+    .then(prayer => {
+        prayer.firstName = req.body.firstName;
+        prayer.lastName = req.body.lastName;
+        prayer.description = req.body.description;
+        prayer.date = Date.parse(req.body.date);
 
-        prayerrequest.save()
+        prayer.save()
         .then(() => res.json('Prayer Request updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
