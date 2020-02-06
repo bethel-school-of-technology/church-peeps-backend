@@ -1,13 +1,18 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
 
+
 router.route('/').get((req, res) => {
-    User.find()
-    .then(users => res.json(users))
+   User.find()
+    .then(users => 
+        res.json(users)
+    )
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/add').post((req, res) => {
+
+
+router.route('/add').post ( (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const email = req.body.email;
@@ -55,5 +60,25 @@ router.route('/update/:id').put((req, res) => {
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.route('/admin').get((req, res) => {
+    let token=req.cookies.jwt;
+    if(token){
+        authService.verifyUser(token)
+        .then(user=>{
+            if(user.Admin){
+                models.users
+                .findAll({
+                    where:{Deleted: false}, raw: true
+                })
+               .then(usersFound=>res.render('admin', {users: usersFound}));
+            } else {
+                res.send('unauthorized')
+            }
+            });
+       } else {
+           res.send('error: admin not logged in')
+       } 
+   });
 
 module.exports = router;

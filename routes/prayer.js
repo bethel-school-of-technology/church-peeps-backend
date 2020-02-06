@@ -50,6 +50,88 @@ router.route('/update/:id').put((req, res) => {
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
+
 });
+
+router.route('/admin').get((req, res)  => {
+    let token = req.cookies.jwt;
+    if (token) {
+      authService.verifyUser(token)
+        .then(prayer => {
+          if (prayer.Admin) {
+            models.prayer
+              .findAll({
+                where: { Deleted: false }, raw: true
+              })
+              .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
+          } else {
+            res.send('unauthorized')
+          }
+        });
+    } else {
+      res.send('error: admin not logged in')
+    }
+  });
+
+  router.route('/admin/editUser/:id').get((req, res) => {
+    let token = req.cookies.jwt;
+    if (token) {
+      authService.verifyUser(token)
+        .then(user => {
+          if (user.Admin) {
+            models.users
+              .findByPk(parseInt(req.params.id))
+              .then(userFound => {
+                res.render('adminProfile', {
+                  UserId: userFound.UserId,
+                  FirstName: userFound.FirstName,
+                  LastName: userFound.LastName,
+                  Email: userFound.Email,
+                  Username: userFound.Username,
+                  Admin: userFound.Admin
+                });
+              });
+          } else {
+            res.send('Must be an admin to view this page');
+          }
+        });
+    } else {
+      res.send('Oops')
+    }
+  });
+  router.get('/admin/deleteUser/:id', function (req, res, next) {
+    let token = req.cookies.jwt;
+    if (token) {
+      authService.verifyUser(token)
+        .then(user => {
+          if (user.Admin) {
+            models.users
+              .findByPk(parseInt(req.params.id))
+              .then(userFound => {
+                let userDeleteId = parseInt(req.params.id);
+                models.users.update(
+                  {
+                    Deleted: 'true'
+                  },
+                  {
+                    where: {
+                      UserId: userDeleteId
+                    }
+                  }
+                )
+                  .then(user => {
+                    res.redirect('/users/admin');
+                  })
+              });
+          } else {
+            res.send('Must be an admin to view this page')
+          }
+        });
+    } else {
+      res.send('error: admin not logged in')
+    }
+  });
+  
+  
 
 module.exports = router;
