@@ -3,7 +3,7 @@ var cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
-mongoose.connect('mongodb+srv://mountainprincess:mountain.princess@1980@churchusersprayerrequests-92bir.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true }, () => console.log('connected to db'));
+mongoose.connect('mongodb+srv://RaRa:RaRa1@rara1-czxzu.mongodb.net/test?retryWrites=true&w=majority', { useNewUrlParser: true }, () => console.log('connected to db'));
 
 const app = express();
 const router = express.Router();
