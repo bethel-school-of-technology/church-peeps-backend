@@ -39,9 +39,11 @@ const userSchema = new Schema ({
         minlength: 8,
         maxlength: 999
     },
+    isAdmin: Boolean
 }, {
         timestamps: true
 
     });
+
 
 module.exports = User = mongoose.model('user', userSchema);

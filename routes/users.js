@@ -13,7 +13,6 @@ router.route('/add').post((req, res) => {
     const email = req.body.email;
     const username = req.body.username;
     const password = req.body.password;
-
     
     const newUser = new User({
         firstName,
@@ -22,7 +21,7 @@ router.route('/add').post((req, res) => {
         username,
         password,
     });
-
+  
     newUser.save()
     .then(() => res.json('User added!'))
     .catch(err => res.status(400).json('Error: ' + err));
@@ -55,5 +54,45 @@ router.route('/update/:id').put((req, res) => {
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+router.route('/admin').get((req, res) => {
+ let token=req.cookies.jwt;
+ if(token){
+     authService.verifyUser(token)
+     .then(user=>{
+         if(user.Admin){
+             models.users
+             .findAll({
+                 where:{Deleted: false}, raw: true
+             })
+            .then(usersFound=>res.render('admin', {users: usersFound}));
+         } else {
+             res.send('unauthorized')
+         }
+         });
+    } else {
+        res.send('error: admin not logged in')
+    } 
+});
+
+router.route('/admin/add').post((req, res) => {
+    let token=req.cookies.jwt;
+    if(token){
+        authService.verifyUser(token)
+        .then(user=>{
+            if(user.Admin){
+                models.users
+                .findAll({
+                    where:{Deleted: false}, raw: true
+                })
+               .then(usersFound=>res.render('admin', {users: usersFound}));
+            } else {
+                res.send('unauthorized')
+            }
+            });
+       } else {
+           res.send('error: admin not logged in')
+       } 
+   });
 
 module.exports = router;
