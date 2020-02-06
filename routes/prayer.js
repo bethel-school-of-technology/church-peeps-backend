@@ -52,4 +52,23 @@ router.route('/update/:id').put((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
+router.route('/admin').get((req, res)  => {
+    let token = req.cookies.jwt;
+    if (token) {
+      authService.verifyUser(token)
+        .then(prayer => {
+          if (prayer.Admin) {
+            models.prayer
+              .findAll({
+                where: { Deleted: false }, raw: true
+              })
+              .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
+          } else {
+            res.send('unauthorized')
+          }
+        });
+    } else {
+      res.send('error: admin not logged in')
+    }
+  });
 module.exports = router;
