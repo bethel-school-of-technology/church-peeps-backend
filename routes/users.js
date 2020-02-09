@@ -1,5 +1,7 @@
 const router = require('express').Router();
+
 let User = require('../models/user.model');
+
 
 router.route('/').get((req, res) => {
     User.find()
@@ -61,7 +63,7 @@ router.route('/admin').get((req, res) => {
      authService.verifyUser(token)
      .then(user=>{
          if(user.Admin){
-             models.users
+             models.user
              .findAll({
                  where:{Deleted: false}, raw: true
              })
@@ -81,7 +83,7 @@ router.route('/admin/add').post((req, res) => {
         authService.verifyUser(token)
         .then(user=>{
             if(user.Admin){
-                models.users
+                models.user
                 .findAll({
                     where:{Deleted: false}, raw: true
                 })
