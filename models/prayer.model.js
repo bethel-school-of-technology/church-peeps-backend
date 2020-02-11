@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const PrayerSchema = new Schema({
+const prayerSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
     firstName: {
-        type: String
+        type: String,
+        required: true
     },
     lastName: {
         type: String,
@@ -26,6 +27,4 @@ const PrayerSchema = new Schema({
 
     });
 
-const Prayer = mongoose.model('Prayer', PrayerSchema);
-
-module.exports = Prayer;
+module.exports = Prayer = mongoose.model('prayer', prayerSchema);

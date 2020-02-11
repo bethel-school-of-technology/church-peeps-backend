@@ -1,13 +1,13 @@
 const router = require('express').Router();
 let PrayerRequest = require('../models/prayer.model');
 
-router.route('/').get((req, res) => {
+router.get('/', (req, res) => {
     PrayerRequest.find()
     .then(prayer => res.json(prayer))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/add').post((req, res) => {
+router.post('/add', (req, res) => {
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const description = req.body.description;
@@ -25,19 +25,19 @@ router.route('/add').post((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').get((req, res) => {
+router.get('/:id', (req, res) => {
     PrayerRequest.findById(req.params.id)
     .then(prayer => res.json(prayer))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/:id').delete((req, res) => {
+router.delete('/:id', (req, res) => {
     PrayerRequest.findByIdAndDelete(req.params.id)
     .then(() => res.json('Prayer Request deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/update/:id').put((req, res) => {
+router.put('/update/:id', (req, res) => {
     PrayerRequest.findById(req.params.id)
     .then(prayer => {
         prayer.firstName = req.body.firstName;
@@ -52,7 +52,7 @@ router.route('/update/:id').put((req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.route('/admin').get((req, res)  => {
+router.get('/admin', (req, res)  => {
     let token = req.cookies.jwt;
     if (token) {
       authService.verifyUser(token)
@@ -71,4 +71,5 @@ router.route('/admin').get((req, res)  => {
       res.send('error: admin not logged in')
     }
   });
+
 module.exports = router;
