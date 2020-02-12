@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let PrayerRequest = require('../models/prayer.model');
+let authService = require('../services/auth');
 
 router.get('/', (req, res) => {
     PrayerRequest.find()
