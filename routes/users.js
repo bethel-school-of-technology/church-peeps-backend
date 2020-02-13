@@ -59,26 +59,20 @@ router.get('/profile', (req, res, next) => {
     }
 });
 
-router.post('/add', function(req, res, next) {
-    models.users
-    .findOrCreate({
-        where: {
-            username: req.body.username
-        },
-        defaults: {
-            firstName: req.body.firstName,
-            lastName: req.body.lastName,
-            email: req.body.email,
-            password: authService.hashPassword(req.body.password)
-        }
-    })
-    .spread((result, created) => {
-        if (created) {
-            res.send('User successfully created');
-        } else {
-            res.send('This user already exists');
-        }
-    });
+router.post('/add', function (req, res, next) {
+
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = authService.hashPassword(req.body.password);
+
+    const newUser = new User({ firstName, lastName, email, username, password });
+
+    newUser
+        .save()
+        .then(() => res.json("User added!"))
+        .catch(err => res.status(400).json("Error: " + err));
 });
 
 router.get('/:id', (req, res, next) => {
@@ -179,7 +173,5 @@ router.post('/admin/add', (req, res) => {
        res.cookie("jwt", "", { expires: new Date(0) });
        res.send("Logged Out");
    });
-
-module.exports = router;
 
 module.exports = router;
