@@ -47,7 +47,7 @@ const userSchema = new Schema({
     tokenExp: {
         type: Number
     },
-    isAdmin: Boolean
+    isAdmin: false
 }, {
         timestamps: true
     });
