@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const models = require('../models/user.model');
+const User = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 
 var authService = {
@@ -8,7 +8,7 @@ var authService = {
      {
        Username: user.Username,
        UserId: user.UserId,
-      //  Admin: user.Admin
+       Admin: user.Admin
      },
      'secretkey',
      {
@@ -20,7 +20,7 @@ var authService = {
  verifyUser: function (token) {
    try {
      let decoded = jwt.verify(token, 'secretkey');
-     return models.users.findByPk(decoded.UserId);
+     return User.findByPk(decoded.UserId);
    } catch (err) {
      console.log(err);
      return null;
