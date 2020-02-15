@@ -1,6 +1,6 @@
 const router = require('express').Router();
 let PrayerRequest = require('../models/prayer.model');
-let authService = require('../services/auth');
+// let authService = require('../services/auth');
 
 router.get('/', (req, res) => {
     PrayerRequest.find()
@@ -53,44 +53,44 @@ router.put('/update/:id', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/admin', (req, res)  => {
-    let token = req.cookies.jwt;
-    if (token) {
-      authService.verifyUser(token)
-        .then(prayer => {
-          if (prayer.Admin) {
-            models.prayer
-              .findAll({
-                where: { Deleted: false }, raw: true
-              })
-              .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
-          } else {
-            res.send('unauthorized')
-          }
-        });
-    } else {
-      res.send('error: admin not logged in')
-    }
-  });
+// router.get('/admin', (req, res)  => {
+//     let token = req.cookies.jwt;
+//     if (token) {
+//       authService.verifyUser(token)
+//         .then(user => {
+//           if (user.Admin) {
+//             models.prayer
+//               .findAll({
+//                 where: { Deleted: false }, raw: true
+//               })
+//               .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
+//           } else {
+//             res.send('error: admin not logged in')
+//           }
+//         });
+//     } else {
+//       res.send('unauthorized')
+//     }
+//   });
 
-  router.post('/admin/add', (req, res) => {
-    let token=req.cookies.jwt;
-    if(token){
-        authService.verifyUser(token)
-        .then(prayer=>{
-            if(prayer.Admin){
-                models.prayers
-                .findAll({
-                    where:{ Deleted: false }, raw: true
-                })
-               .then(prayerRequestFound=>res.render('admin', { prayer: prayerRequestFound }));
-            } else {
-                res.send('unauthorized')
-            }
-            });
-       } else {
-           res.send('error: admin not logged in')
-       } 
-   });
+  // router.post('/admin/add', (req, res) => {
+  //   let token=req.cookies.jwt;
+  //   if(token){
+  //       authService.verifyUser(token)
+  //       .then(user => {
+  //           if (user.Admin){
+  //               models.prayers
+  //               .findAll({
+  //                   where:{ Deleted: false }, raw: true
+  //               })
+  //              .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
+  //           } else {
+  //               res.send('unauthorized')
+  //           }
+  //           });
+  //      } else {
+  //          res.send('error: admin not logged in')
+  //      } 
+  //  });
 
 module.exports = router;

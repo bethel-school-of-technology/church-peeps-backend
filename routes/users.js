@@ -8,8 +8,7 @@ router.get('/', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.post('/login', 
-(req, res, next) => {
+router.post('/login', (req, res, next) => {
     console.log(req.body);
     User.findOne({
       username: req.body.username
@@ -75,43 +74,43 @@ router.post('/add', function (req, res, next) {
         .catch(err => res.status(400).json("Error: " + err));
 });
 
-router.get('/:id', (req, res, next) => {
-    if (req.params.id !== String(req.user.UserId)) {
-        res.send('This is not your profile');
-    } else {
-        let status;
-        if (req.user.Admin) {
-            status = 'Admin';
-        } else {
-            status = 'Normal user';
-        }
-        res.render('profile', {
-            firstName: req.user.firstName,
-            lastName: req.user.lastName,
-            email: req.user.email,
-            UserId: req.user.UserId,
-            username: req.user.username,
-            Status: status
-        });
-    }
-});
+// router.get('/admin/:id', (req, res, next) => {
+//     if (req.params.id !== String(req.user.UserId)) {
+//         res.send('This is not your profile');
+//     } else {
+//         let status;
+//         if (req.user.Admin) {
+//             status = 'Admin';
+//         } else {
+//             status = 'Normal user';
+//         }
+//         res.render('profile', {
+//             UserId: req.user.UserId,
+//             firstName: req.user.firstName,
+//             lastName: req.user.lastName,
+//             email: req.user.email,
+//             username: req.user.username,
+//             Status: status
+//         });
+//     }
+// });
 
-router.delete('/:id', (req, res, next) => {
-    if (req.param.id !== String
-        (req.params.UserId)) {
-            res.send('Not Admin');
-        } else {
-            let status;
-            if (req.user.Admin) {
-                status = 'Admin';
-            } else {
-                status = 'Normal user';
-            }
-        }
-    User.findByIdAndDelete
-    .then(() => res.json('User deleted.'))
-    .catch(err => res.status(400).json('Error: ' + err));
-});
+// router.delete('/admin/:id', (req, res, next) => {
+//     if (req.param.id !== String
+//         (req.params.UserId)) {
+//             res.send('Not Admin');
+//         } else {
+//             let status;
+//             if (req.user.Admin) {
+//                 status = 'Admin';
+//             } else {
+//                 status = 'Normal user';
+//             }
+//         }
+//     User.findByIdAndDelete
+//     .then(() => res.json('User deleted.'))
+//     .catch(err => res.status(400).json('Error: ' + err));
+// });
 
 router.put('/update/:id', (req, res) => {
     User.findById(req.params.id)
@@ -129,45 +128,50 @@ router.put('/update/:id', (req, res) => {
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/admin', (req, res) => {
- let token=req.cookies.jwt;
- if(token){
-     authService.verifyUser(token)
-     .then(user=>{
-         if(user.Admin){
-             models.user
-             .findAll({
-                 where:{Deleted: false}, raw: true
-             })
-            .then(usersFound=>res.render('admin', {users: usersFound}));
-         } else {
-             res.send('unauthorized')
-         }
-         });
-    } else {
-        res.send('error: admin not logged in')
-    } 
+router.delete('/:id', (req, res) => {
+    User.findByIdAndDelete(req.params.id)
+    .then(() => res.json("User deleted"))
+    .catch(err => res.status(400).json("Error: " + err));
 });
+// router.get('/admin', (req, res) => {
+//  let token=req.cookies.jwt;
+//  if(token){
+//      authService.verifyUser(token)
+//      .then(user=>{
+//          if(user.Admin){
+//              models.user
+//              .findAll({
+//                  where:{Deleted: false}, raw: true
+//              })
+//             .then(usersFound=>res.render('admin', {users: usersFound}));
+//          } else {
+//              res.send('unauthorized')
+//          }
+//          });
+//     } else {
+//         res.send('error: admin not logged in')
+//     } 
+// });
 
-router.post('/admin/add', (req, res) => {
-    let token=req.cookies.jwt;
-    if(token){
-        authService.verifyUser(token)
-        .then(user=>{
-            if(user.Admin){
-                models.user
-                .findAll({
-                    where:{Deleted: false}, raw: true
-                })
-               .then(usersFound=>res.render('admin', {users: usersFound}));
-            } else {
-                res.send('unauthorized')
-            }
-            });
-       } else {
-           res.send('error: admin not logged in')
-       } 
-   });
+// router.post('/admin/add', (req, res) => {
+//     let token=req.cookies.jwt;
+//     if(token){
+//         authService.verifyUser(token)
+//         .then(user=>{
+//             if(user.Admin){
+//                 models.user
+//                 .findAll({
+//                     where:{Deleted: false}, raw: true
+//                 })
+//                .then(usersFound=>res.render('admin', {users: usersFound}));
+//             } else {
+//                 res.send('unauthorized')
+//             }
+//             });
+//        } else {
+//            res.send('error: admin not logged in')
+//        } 
+//    });
 
    router.get('/logout', (req, res) => {
        res.cookie("jwt", "", { expires: new Date(0) });

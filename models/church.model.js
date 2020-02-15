@@ -1,21 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const PrayerSchema = new Schema({
+const ChurchSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    firstName: {
+    title: {
         type: String,
         required: true
     },
-    lastName: {
+    city: {
         type: String,
         required: true
     },
-
-    description: {
+    state: {
         type: String,
         required: true
     },
@@ -23,10 +22,10 @@ const PrayerSchema = new Schema({
         type: Number
     },
 }, {
-        timestamps: true,
+timestamps: true,
 
-    });
+});
 
-const Prayer = mongoose.model('Prayer', PrayerSchema);
+const Church = mongoose.model('Church', ChurchSchema);
 
-module.exports = Prayer;
+module.exports = Church;

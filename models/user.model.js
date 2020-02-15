@@ -8,6 +8,12 @@ const userSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    // UserId: {
+    //     type: DataTypes.INTEGER,
+    //     autoIncrement: true,
+    //     primaryKey: true,
+    //     allowNull: false
+    // },
     firstName: {
         type: String,
         required: true,
@@ -47,7 +53,7 @@ const userSchema = new Schema({
     tokenExp: {
         type: Number
     },
-    isAdmin: Boolean
+    Admin: Boolean
 }, {
         timestamps: true
     });

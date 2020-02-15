@@ -36,10 +36,13 @@ app.use(passport.session());
 
 const PrayerRouter = require('./routes/prayer');
 const usersRouter = require('./routes/users');
+const churchRouter = require('./routes/church');
 
 
 app.use('/prayer', PrayerRouter);
 app.use('/users', usersRouter);
+app.use('/church', churchRouter);
+
 
 app.listen(PORT, () => 
     console.log(`Server is running on port: ${PORT}`));
