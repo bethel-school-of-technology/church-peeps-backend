@@ -7,6 +7,21 @@ router.get('/', (req, res) => {
     .then(users => res.json(users))
     .catch(err => res.status(400).json('Error: ' + err));
 });
+router.post('/add', function (req, res, next) {
+
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const username = req.body.username;
+    const password = authService.hashPassword(req.body.password);
+
+    const newUser = new User({ firstName, lastName, email, username, password });
+
+    newUser
+        .save()
+        .then(() => res.json("User added!"))
+        .catch(err => res.status(400).json("Error: " + err));
+});
 
 router.post('/login', (req, res, next) => {
     console.log(req.body);
@@ -58,21 +73,7 @@ router.get('/profile', (req, res, next) => {
     }
 });
 
-router.post('/add', function (req, res, next) {
 
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const email = req.body.email;
-    const username = req.body.username;
-    const password = authService.hashPassword(req.body.password);
-
-    const newUser = new User({ firstName, lastName, email, username, password });
-
-    newUser
-        .save()
-        .then(() => res.json("User added!"))
-        .catch(err => res.status(400).json("Error: " + err));
-});
 
 // router.get('/admin/:id', (req, res, next) => {
 //     if (req.params.id !== String(req.user.UserId)) {
