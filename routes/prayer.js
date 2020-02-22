@@ -1,14 +1,31 @@
 const router = require('express').Router();
 let PrayerRequest = require('../models/prayer.model');
-// let authService = require('../services/auth');
+let authService = require('../services/auth');
 
 router.get('/', (req, res) => {
-    PrayerRequest.find()
-    .then(prayer => res.json(prayer))
-    .catch(err => res.status(400).json('Error: ' + err));
+    let token = req.cookies.jwt;
+    if (token) {
+        authService.verifyUser(token)
+        .then(user => {
+            if (user) {
+                res.send(JSON.stringify(user));
+            } else {
+                res.status(401);
+                res.send('Invalid authentication token');
+            }
+        });
+    } else {
+        res.status(401);
+        res.send('Must be logged in');
+    }
 });
+    // .then(prayer => res.json(prayer))
+    // .catch(err => res.status(400).json('Error: ' + err));
+
+// PrayerRequest.find()
 
 router.post('/add', (req, res) => {
+    
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
     const description = req.body.description;

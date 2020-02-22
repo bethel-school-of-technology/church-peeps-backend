@@ -36,12 +36,12 @@ app.use(passport.session());
 
 const PrayerRouter = require('./routes/prayer');
 const usersRouter = require('./routes/users');
-const churchRouter = require('./routes/church');
+const ProfileRouter = require('./routes/profile');
 
 
 app.use('/prayer', PrayerRouter);
 app.use('/users', usersRouter);
-app.use('/church', churchRouter);
+app.use('/profile', ProfileRouter);
 
 
 app.listen(PORT, () => 
