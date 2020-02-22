@@ -1,20 +1,12 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const ChurchSchema = new Schema({
+const ProfileSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    title: {
-        type: String,
-        required: true
-    },
-    city: {
-        type: String,
-        required: true
-    },
-    state: {
+    username: {
         type: String,
         required: true
     },
@@ -26,6 +18,6 @@ timestamps: true,
 
 });
 
-const Church = mongoose.model('Church', ChurchSchema);
+const Profile = mongoose.model('profile', ProfileSchema);
 
-module.exports = Church;
+module.exports = Profile;
