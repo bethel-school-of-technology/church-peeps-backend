@@ -6,6 +6,10 @@ const PrayerSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
+    prayer: {
+        type: Schema.Types.ObjectId,
+        ref: 'prayer'
+    },
     firstName: {
         type: String,
         required: true
@@ -20,13 +24,13 @@ const PrayerSchema = new Schema({
         required: true
     },
     date: {
-        type: Number
+        type: Date
     },
 }, {
         timestamps: true,
 
     });
 
-const Prayer = mongoose.model('Prayer', PrayerSchema);
+const Prayer = mongoose.model('prayer', PrayerSchema);
 
 module.exports = Prayer;

@@ -1,6 +1,9 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
 let authService = require('../services/auth');
+const withAuth = require('../middleware');
+const jwt = require('jsonwebtoken');
+const cors = require('cors');
 
 router.get('/', (req, res) => {
   User.find()
@@ -16,13 +19,54 @@ router.post('/add', function (req, res, next) {
   const username = req.body.username;
   const password = authService.hashPassword(req.body.password);
 
-  const newUser = new User({ firstName, lastName, email, username, password });
+  const newUser = new User({ 
+    firstName, 
+    lastName, 
+    email, 
+    username, 
+    password
+   });
 
   newUser
     .save()
     .then(() => res.json("User added!"))
     .catch(err => res.status(400).json("Error: " + err));
 });
+
+// router.post('/login', withAuth, (req, res, next) => {
+//   const { username } = req.body;
+//   User.findOne({ username }, function(err, user) {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).json({
+//         error: "Internal error, please try again"
+//       });
+//     } else if (!user) {
+//       res.status(401).json({
+//         error: "Incorrect username or password"
+//       }); 
+//     } else {
+//       let passwordMatch = authService.comparePasswords(
+//         req.body.password,
+//         user.password
+//       );
+//       if (passwordMatch) {
+//         let token = authService.signUser(user);
+//         let responseuser = {
+//           username: user.username
+//         };
+//         console.log(responseuser);
+//         res.header({ Authorization: "Bearer " + token }).sendStatus(200);
+//       } else if (!same) {
+//         res.status(401).json({
+//           error: "Incorrect username or password"
+//         });
+//       }
+//     }
+//   });
+// }); 
+
+       
 
 
 router.post('/login', (req, res, next) => {
@@ -45,8 +89,7 @@ router.post('/login', (req, res, next) => {
         let responseuser = {
           username: user.username
         };
-        res.cookie("jwt", token);
-        res.send('Login successful')
+        res.header({ Authorization: "Bearer " + token });
         res.json(responseuser);
       } else {
         console.log("Wrong password");
@@ -56,30 +99,18 @@ router.post('/login', (req, res, next) => {
   });
 });
 
+router.get('/checkToken', (req, res) => {
+  res.sendStatus(200);
+});
+
 router.get('/logout', (req, res, next) => {
   res.cookie("jwt", "", { expires: new Date(0) });
+  console.log(res);
   res.send("Logged Out");
 });
 
-// router.get('/profile', (req, res, next) => {
-//   let token = req.cookies.jwt;
-//   if (token) {
-//     authService.verifyUser(token)
-//       .then(user => {
-//         if (user) {
-//           res.send(JSON.stringify(user));
-//         } else {
-//           res.status(401);
-//           res.send('Invalid authentication token');
-//         }
-//       });
-//      } else {
-//           res.status(401);
-//           res.send('Must be logged in');
-        
-//       }
-       
-// });
+
+
 
 // router.get('/profile/:id', (req, res, next) => {
 //     if (req.params.id !== String(req.user.UserId)) {
@@ -135,15 +166,11 @@ router.put('/update/:id', (req, res) => {
 });
 
   router.delete('/:id', (req, res) => {
-    const user = User.findByIdAndRemove(req.params.id)
-    console.log(user);
-    if (!user) {
-        return res.status(404).json({msg: 'User not found'})
-    }
-    res.json({
-        msg: 'User Removed'
-    });
-  } )
+    User.findByIdAndDelete(req.params.id)
+    .then(() => res.json('User deleted.'))
+    .catch(err => res.status(400).json('Error: ' + err));
+    
+  });
     
 // router.get('/admin', (req, res) => {
 //  let token=req.cookies.jwt;
