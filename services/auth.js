@@ -7,7 +7,6 @@ var authService = {
    const token = jwt.sign(
      {
        Username: user.Username,
-       UserId: user.UserId,
        Admin: user.Admin
      },
      'secretkey',
@@ -15,12 +14,13 @@ var authService = {
        expiresIn: '1h'
      }
    );
+   console.log(token);
    return token;
  },
  verifyUser: function (token) {
    try {
      let decoded = jwt.verify(token, 'secretkey');
-     return User.findByPk(decoded.UserId);
+     return User.findByName(decoded.username);
    } catch (err) {
      console.log(err);
      return null;

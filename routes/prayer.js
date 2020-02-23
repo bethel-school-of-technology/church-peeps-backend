@@ -1,28 +1,14 @@
 const router = require('express').Router();
 let PrayerRequest = require('../models/prayer.model');
 let authService = require('../services/auth');
+const withAuth = require('../middleware');
+const User = require('../models/user.model');
 
 router.get('/', (req, res) => {
-    let token = req.cookies.jwt;
-    if (token) {
-        authService.verifyUser(token)
-        .then(user => {
-            if (user) {
-                res.send(JSON.stringify(user));
-            } else {
-                res.status(401);
-                res.send('Invalid authentication token');
-            }
-        });
-    } else {
-        res.status(401);
-        res.send('Must be logged in');
-    }
+    PrayerRequest.find()
+    .then(prayer => res.json(prayer))
+    .catch(err => res.status(400).json("Error: " + err));
 });
-    // .then(prayer => res.json(prayer))
-    // .catch(err => res.status(400).json('Error: ' + err));
-
-// PrayerRequest.find()
 
 router.post('/add', (req, res) => {
     
@@ -30,45 +16,67 @@ router.post('/add', (req, res) => {
     const lastName = req.body.lastName;
     const description = req.body.description;
     const date = Date.parse(req.body.date);
+    console.log(req.username);
 
-    const newPrayerRequest = new PrayerRequest({
+    const newPrayer = new Prayer({
         firstName,
         lastName,
         description,
         date,
     });
 
-    newPrayerRequest.save()
+    newPrayer
+    .save()
     .then(() => res.json('Prayer Request added!'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.get('/:id', (req, res) => {
-    PrayerRequest.findById(req.params.id)
+    Prayer.findById(req.params.id)
     .then(prayer => res.json(prayer))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.delete('/:id', (req, res) => {
-    PrayerRequest.findByIdAndDelete(req.params.id)
+    Prayer.findByIdAndDelete(req.params.id)
     .then(() => res.json('Prayer Request deleted.'))
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.put('/update/:id', (req, res) => {
-    PrayerRequest.findById(req.params.id)
+    Prayer.findById(req.params.id)
     .then(prayer => {
+        console.log(req.prayer)
         prayer.firstName = req.body.firstName;
         prayer.lastName = req.body.lastName;
         prayer.description = req.body.description;
         prayer.date = Date.parse(req.body.date);
 
-        prayer.save()
+        prayer
+        .save()
         .then(() => res.json('Prayer Request updated!'))
         .catch(err => res.status(400).json('Error: ' + err));
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
+
+// router.get('/', (req, res) => {
+//     let token = req.cookies.jwt;
+//     if (token) {
+//         authService.verifyUser(token)
+//         .then(user => {
+//             if (user) {
+//                 res.send(JSON.stringify(user));
+//             } else {
+//                 res.status(401);
+//                 res.send('Invalid authentication token');
+//             }
+//         });
+//     } else {
+//         res.status(401);
+//         res.send('Must be logged in');
+//     }
+// });
 
 // router.get('/admin', (req, res)  => {
 //     let token = req.cookies.jwt;

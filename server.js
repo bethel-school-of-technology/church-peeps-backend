@@ -5,6 +5,7 @@ const passport = require('passport');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const withAuth = require('./middleware');
 
 require("dotenv").config();
 
@@ -27,6 +28,14 @@ app.use(cookieParser());
 // const ImageRouter = require('./routes/image');
 // app.use('/image', ImageRouter);
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+    res.header("Access-Control-Expose-Headers", "Authorization");
+    next();
+  });
+  
 app.use(cors());
 app.use(express.json());
 

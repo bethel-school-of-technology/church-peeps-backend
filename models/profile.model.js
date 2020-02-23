@@ -6,12 +6,17 @@ const ProfileSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'users'
     },
-    username: {
+    city: {
         type: String,
         required: true
     },
-    date: {
-        type: Number
+    state: {
+        type: String,
+        required: true
+    },
+    church: {
+        type: String,
+        required: true
     },
 }, {
 timestamps: true,
