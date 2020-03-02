@@ -3,9 +3,6 @@ var cors = require('cors');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const session = require('express-session');
-const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const withAuth = require('./middleware');
 
 require("dotenv").config();
 
@@ -16,17 +13,6 @@ const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 const connection = mongoose.connection;
 connection.once("open", () => console.log('connected to db'));
-
-// const router = express.Router();
-
-app.use('/uploads', express.static('uploads'));
-app.use(bodyParser.json({limit: '50mb'}));
-app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
-app.use(cookieParser());
-// app.use(express.static(path.join(_dirname, 'public')));
-
-// const ImageRouter = require('./routes/image');
-// app.use('/image', ImageRouter);
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");

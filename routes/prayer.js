@@ -1,8 +1,5 @@
 const router = require('express').Router();
 let Prayer = require('../models/prayer.model');
-let authService = require('../services/auth');
-const withAuth = require('../middleware');
-const User = require('../models/user.model');
 
 router.get('/', (req, res) => {
     Prayer.find()
@@ -32,27 +29,6 @@ router.post('/add', (req, res) => {
     });
 });
 
-// router.post('/add', (req, res) => {
-    
-//     const firstName = req.body.firstName;
-//     const lastName = req.body.lastName;
-//     const description = req.body.description;
-//     const date = Date.parse(req.body.date);
-//     console.log(req.username);
-
-//     const newPrayer = new Prayer({
-//         firstName,
-//         lastName,
-//         description,
-//         date,
-//     });
-
-//     newPrayer
-//     .save()
-//     .then(() => res.json('Prayer Request added!'))
-//     .catch(err => res.status(400).json('Error: ' + err));
-// });
-
 router.get('/:id', (req, res) => {
     Prayer.findById(req.params.id)
     .then(prayer => res.json(prayer))
@@ -81,63 +57,5 @@ router.put('/update/:id', (req, res) => {
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
-
-// router.get('/', (req, res) => {
-//     let token = req.cookies.jwt;
-//     if (token) {
-//         authService.verifyUser(token)
-//         .then(user => {
-//             if (user) {
-//                 res.send(JSON.stringify(user));
-//             } else {
-//                 res.status(401);
-//                 res.send('Invalid authentication token');
-//             }
-//         });
-//     } else {
-//         res.status(401);
-//         res.send('Must be logged in');
-//     }
-// });
-
-// router.get('/admin', (req, res)  => {
-//     let token = req.cookies.jwt;
-//     if (token) {
-//       authService.verifyUser(token)
-//         .then(user => {
-//           if (user.Admin) {
-//             models.prayer
-//               .findAll({
-//                 where: { Deleted: false }, raw: true
-//               })
-//               .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
-//           } else {
-//             res.send('error: admin not logged in')
-//           }
-//         });
-//     } else {
-//       res.send('unauthorized')
-//     }
-//   });
-
-  // router.post('/admin/add', (req, res) => {
-  //   let token=req.cookies.jwt;
-  //   if(token){
-  //       authService.verifyUser(token)
-  //       .then(user => {
-  //           if (user.Admin){
-  //               models.prayers
-  //               .findAll({
-  //                   where:{ Deleted: false }, raw: true
-  //               })
-  //              .then(prayerRequestFound => res.render('admin', { prayer: prayerRequestFound }));
-  //           } else {
-  //               res.send('unauthorized')
-  //           }
-  //           });
-  //      } else {
-  //          res.send('error: admin not logged in')
-  //      } 
-  //  });
 
 module.exports = router;
